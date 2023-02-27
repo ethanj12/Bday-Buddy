@@ -1,63 +1,34 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Button} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Alert} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import SQLite from "react-native-sqlite-storage"
+import * as SQLite from 'expo-sqlite'
+
 
 import React, { useState } from 'react'
 
-// const db = SQLite.openDatabase(
-//   {
-//     name: 'Main Database',
-//     location: 'default'
-//   },
-//   () => {},
-//   error => {console.log(error)}
-// );
-
 export default function CreateBirthdayScreen({ navigation, route }) {
+    const db = SQLite.openDatabase('Birthday.db')
 
     const [name, setName] = useState('');
     const [notes, setNotes] = useState('');
-    const [currId, setCurrId] = useState('0');
-    const [birthday, setDate] = useState(new Date());
-    const [displaymode, setMode] = useState('date');
+    const [mydate, setDate] = useState(new Date());
+    const [birthday, setBirthday] = useState('')
     const [isDisplayDate, setShow] = useState(false);
+    const [displaymode, setMode] = useState('date');
 
-
-    const changeSelectedDate = (event, selectedDate) => {
-    const currentDate = selectedDate || birthday;
-    setDate(currentDate);
-    };
     const showMode = (currentMode) => {
       isDisplayDate ?  setShow(false) : setShow(true);
-      setMode(currentMode);
+      setMode(displaymode);
     };
     const displayDatepicker = () => {
       showMode('date');
     };
 
-  // const createTable=() => {
-  //   db.transaction((tx) => {
-  //     tx.executeSql(
-  //       "CREATE TABLE IF NOT EXIST "
-  //       +"Birthdays "
-  //       +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Birthday TEXT, Notes TEXT)"
-  //     )
-  //   })
-  // }
-
-  // const setData = async () => {
-  //   try {
-  //     await db.transaction(async (tx) => {
-  //       await tx.executeSql (
-  //         "INSERT INTO Birthdays (Name, Birthday, Notes) VALUES (?,?,?)",
-  //         [name, birthday, notes]
-  //       );
-  //     })
-  //     navigation.navigate("HomeScreen", merge=true)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
+  const addName = () => {
+    db.transaction(tx => {
+      tx.executeSql('INSERT INTO birthdays (name, birthday, notes) VALUES (?,?,?)', [name, birthday, notes])
+    });
+    navigation.navigate("HomeScreen");
+  }
 
     return (
         <SafeAreaView style={styles.container}>  
@@ -68,20 +39,24 @@ export default function CreateBirthdayScreen({ navigation, route }) {
             {isDisplayDate && (
                   <DateTimePicker
                      testID="dateTimePicker"
-                     value={birthday}
+                     value={mydate}
                      mode={displaymode}
                      is24Hour={true}
                      display="spinner"
-                     onChange={changeSelectedDate}
+                     onChange={(evt, selectedDate) => {
+                      setDate(selectedDate);
+                      setBirthday(`${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`);
+                    }}
                   />
-            )}
+            )} 
             <Text>{name}</Text>
+            <Text>{birthday}</Text>
             <TextInput
               placeholder='Notes for gifts'
               onChangeText={setNotes}
             />
             <Button title='Create' 
-              onPress={setBirthdayData()}
+              onPress={() => {addName()}}
             />
         </SafeAreaView>
     );
