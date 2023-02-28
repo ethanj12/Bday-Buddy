@@ -24,7 +24,7 @@ export default function HomeScreen({ navigation, route }) {
   }, []);
   useFocusEffect(() => { //This might be running SQL every render. Def not best use of resources 0_0
       db.transaction(tx => {
-      tx.executeSql('SELECT * FROM birthdays', null,
+      tx.executeSql('SELECT * FROM birthdays ORDER BY birthday', null,
         (txObj, resultSet) => setPeople(resultSet.rows._array),
         (txObj, error) => console.log(error)
       )
