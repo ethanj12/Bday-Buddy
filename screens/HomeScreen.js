@@ -55,7 +55,21 @@ export default function HomeScreen({ navigation, route }) {
 
   useFocusEffect(() => { //This might be running SQL every render. Def not best use of resources 0_0
     db.transaction(tx => {
-      tx.executeSql('SELECT * FROM birthday_data ORDER BY CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)', null,
+      tx.executeSql("SELECT *, " +
+        "CASE WHEN CAST(birthday_month AS INTEGER) >= curr_month " +
+          "THEN 1 " +
+          "ELSE 0 " +
+          "END AS month_has_past ," +
+        "CASE WHEN CAST(birthday_day AS INTEGER) >= curr_day " +
+          "THEN 1 " +
+          "ELSE 0 " +
+          "END AS day_has_past " +
+        "FROM (SELECT *, " +
+              "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
+              "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day " +
+              "FROM birthday_data) " +
+        "ORDER BY month_has_past DESC, day_has_past DESC, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
+        null,
         (txObj, resultSet) => setPeople(resultSet.rows._array),
         (txObj, error) => console.log(error)
       )

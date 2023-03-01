@@ -23,7 +23,7 @@ export default function CreateBirthdayScreen({ navigation, route }) {
       Alert.alert('Invalid Name', 'Please do not enter digits into the name field')
       return false;
     }
-    if (month.length == 0 || Number(month) < 0 || Number(month) >= 12) {
+    if (month.length == 0 || Number(month) < 0 || Number(month) > 12) {
       Alert.alert('Please enter a valid month')
       return false;
     }
