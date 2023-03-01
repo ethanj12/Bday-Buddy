@@ -74,7 +74,7 @@ export default function HomeScreen({ navigation, route }) {
       notes: item.notes,
       id: item.id})}>
         <Text style={{flex: 2, fontSize:35}}>{item.name}</Text>
-        <Text style={{fontSize:35, backgroundColor:'#000', flex:1, color: '#fff'}}>{item.month} / {item.day}</Text>
+        <Text style={{fontSize:35, backgroundColor:'#000', flex:1, color: '#fff'}}>{item.birthday_month} / {item.birthday_day}</Text>
       </TouchableOpacity >
       ) 
     })
