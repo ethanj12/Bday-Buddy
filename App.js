@@ -1,7 +1,7 @@
 import HomeScreen from "./screens/HomeScreen";
 import BirthdayScreen from "./screens/BirthdayScreen";
 import CreateBirthdayScreen from "./screens/CreateBirthdayScreen";
-import { NavigationContainer, useIsFocused } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BirthdayApp",
-    "slug": "BirthdayApp",
+    "slug": "birthday-reminder-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9854995d-7243-4cf7-8aef-70c30ef8b374"
+      }
+    },
+    "owner": "ethanj12"
   }
 }

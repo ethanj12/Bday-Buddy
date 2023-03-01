@@ -4,12 +4,12 @@ import * as SQLite from 'expo-sqlite'
 
 export default function BirthdayScreen({ navigation, route}) {
 
-    const db = SQLite.openDatabase('Birthday.db')
-    const { name, birthday, notes, id } = route.params;
+  const db = SQLite.openDatabase('Birthday_data.db')
+    const { name, birthday_month, birthday_day, notes, id } = route.params;
 
   const deletePerson = (id) => {
     db.transaction(tx => {
-      tx.executeSql('DELETE FROM birthdays WHERE id = ?', [id])
+      tx.executeSql('DELETE FROM birthday_data WHERE id = ?', [id])
     })
     navigation.navigate("HomeScreen")
   }
@@ -24,15 +24,17 @@ export default function BirthdayScreen({ navigation, route}) {
         <ImageBackground source={{uri: 'https://i.pinimg.com/236x/99/d9/54/99d954303bc7de063b545cd1ad3f34d3.jpg'}} style={styles.imageBackground}>
           <View style={styles.container}>
             <View style={styles.innerPlacard}>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => {deletePerson(id)}}>
+                <Text style={styles.buttonText}>Delete</Text>
+              </TouchableOpacity>
               <View style={styles.allButBottomButton}>
                 <View style={styles.placeholderImage}/>
                 <Text style={{fontSize: 40, paddingTop:10}}>{name}</Text>
-                <Text style={{fontSize: 40, paddingTop:5}}>{birthday}</Text>
+                <Text style={{fontSize: 40, paddingTop:5}}>{birthday_month}</Text>
+                <Text style={{fontSize: 40, paddingTop:5}}>{birthday_day}</Text>
                 <Text style={{fontSize: 20, paddingTop:5}}>{notes}</Text>
-                <Text>{id}</Text>
               </View>
-              <Button title="Delete entry" onPress={() => {deletePerson(id)}}/>
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("HomeScreen")}>
+              <TouchableOpacity style={styles.createButton} onPress={() => navigation.navigate("HomeScreen")}>
                 <Text style={styles.buttonText}>Go Back</Text>
               </TouchableOpacity>
               </View>
@@ -50,8 +52,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  button : {
-    color: "#fff",
+  deleteButton : {
+    height: 50,
+    width: '100%',
+    backgroundColor: '#f00',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10
+  },
+  createButton : {
     height: 50,
     width: '100%',
     backgroundColor: '#000',
@@ -70,7 +81,6 @@ const styles = StyleSheet.create({
   },  
   innerPlacard : {
     backgroundColor: "#555",
-    paddingTop: '10%',
     height: '80%',
     width: "80%",
     borderRadius: 10,
