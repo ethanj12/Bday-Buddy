@@ -55,7 +55,7 @@ export default function HomeScreen({ navigation, route }) {
 
   useFocusEffect(() => { //This might be running SQL every render. Def not best use of resources 0_0
     db.transaction(tx => {
-      tx.executeSql('SELECT * FROM birthday_data', null,
+      tx.executeSql('SELECT * FROM birthday_data ORDER BY CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)', null,
         (txObj, resultSet) => setPeople(resultSet.rows._array),
         (txObj, error) => console.log(error)
       )
@@ -69,12 +69,12 @@ export default function HomeScreen({ navigation, route }) {
       <TouchableOpacity  key={String(item.id)} style={styles.item} 
       onPress={() => navigation.navigate("BirthdayScreen", 
       {name: item.name,
-      birthday_month: item.month,
-      birthday_day: item.day,
+      birthday_month: item.birthday_month,
+      birthday_day: item.birthday_day,
       notes: item.notes,
       id: item.id})}>
-        <Text style={{flex: 2, fontSize:35}}>{item.name}</Text>
-        <Text style={{fontSize:35, backgroundColor:'#000', flex:1, color: '#fff'}}>{item.birthday_month} / {item.birthday_day}</Text>
+        <Text style={{flex: 1, fontSize:35}}>{item.name}</Text>
+        <Text style={{fontSize:35}}>{item.birthday_month} / {item.birthday_day}</Text>
       </TouchableOpacity >
       ) 
     })

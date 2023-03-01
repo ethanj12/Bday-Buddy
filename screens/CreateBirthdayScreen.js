@@ -3,6 +3,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as SQLite from 'expo-sqlite'
 import React, { useState } from 'react'
 
+//Index in array is the number of maximum days in that month.
+const days_in_month = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 export default function CreateBirthdayScreen({ navigation, route }) {
     const db = SQLite.openDatabase('Birthday_data.db')
@@ -11,17 +13,6 @@ export default function CreateBirthdayScreen({ navigation, route }) {
     const [notes, setNotes] = useState('');
     const [month, setMonth] = useState('');
     const [day, setDay] = useState('');
-    const [isDisplayDate, setShow] = useState(false);
-    const [displaymode, setMode] = useState('date');
-
-    const showMode = (currentMode) => {
-      isDisplayDate ?  setShow(false) : setShow(true);
-      setMode(displaymode);
-    };
-    const displayDatepicker = () => {
-      showMode('date');
-    };
-
 
   const errorCheck = () => {
     if (name.length == 0){
@@ -32,18 +23,17 @@ export default function CreateBirthdayScreen({ navigation, route }) {
       Alert.alert('Invalid Name', 'Please do not enter digits into the name field')
       return false;
     }
-    if (month.length == 0) {
-      Alert.alert('Invalid Birthday', 'Please enter a birthday')
+    if (month.length == 0 || Number(month) < 0 || Number(month) >= 12) {
+      Alert.alert('Please enter a valid month')
       return false;
     }
-    if (day.length == 0) {
-      Alert.alert('Invalid Birthday', 'Please enter a birthday')
+    if (day.length == 0 || Number(day) > days_in_month[Number(month)] || Number(day) < 0) {
+      Alert.alert('Please enter a valid day')
       return false;
     }
     return true;
   }
   const addName = () => {
-    console.log(typeof(name) + typeof(month)  + typeof(day)  + typeof(notes))
     if(errorCheck()) {
       db.transaction(tx => {
             tx.executeSql('INSERT INTO birthday_data ( name, birthday_month, birthday_day, notes ) VALUES (?,?,?,?)', [name, month, day, notes])
@@ -76,20 +66,6 @@ export default function CreateBirthdayScreen({ navigation, route }) {
                         keyboardType='numeric'
                         returnKeyType='done'/>
                     </View>
-                    {/* <Button onPress={displayDatepicker} title="Show date picker!" />
-                    {isDisplayDate && (
-                        <DateTimePicker
-                          testID="dateTimePicker"
-                          value={mydate}
-                          mode={displaymode}
-                          is24Hour={true}
-                          display="spinner"
-                          onChange={(evt, selectedDate) => {
-                            setDate(selectedDate);
-                            setBirthday(`${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`);
-                          }}
-                        />
-                    )} */}
                     <TextInput
                       placeholder='Notes for gifts'
                       style={{height: 90, width: 250, backgroundColor:'#fff', textAlign: 'center'}}
