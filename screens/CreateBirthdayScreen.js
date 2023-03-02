@@ -8,7 +8,6 @@ const days_in_month = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 export default function CreateBirthdayScreen({ navigation, route }) {
     const db = SQLite.openDatabase('Birthday_data.db')
-
     const [name, setName] = useState('');
     const [notes, setNotes] = useState('');
     const [month, setMonth] = useState('');
@@ -61,7 +60,7 @@ export default function CreateBirthdayScreen({ navigation, route }) {
                         style={styles.monthInput}
                         keyboardType='numeric'
                         returnKeyType='done'/>
-                      <Text style={{fontSize:40, color:'#fff', alignSelf: 'center6'}}> / </Text>
+                      <Text style={{fontSize:40, color:'#fff', alignSelf: 'center'}}> / </Text>
                       <TextInput 
                         placeholder='Day'
                         onChangeText={setDay}

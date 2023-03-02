@@ -16,10 +16,11 @@ Notifications.setNotificationHandler({
 
 export default function HomeScreen({ navigation, route }) {
 
-  const db = SQLite.openDatabase('Birthday_data.db')
+  const db = SQLite.openDatabase('Birthday_data.db');
   const [people, setPeople] = useState([]);
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
+  const [hasUpdated, setHasUpdated] = useState(false);
   const [search, setSearch] = useState('')
   const notificationListener = useRef();
   const responseListener = useRef();
