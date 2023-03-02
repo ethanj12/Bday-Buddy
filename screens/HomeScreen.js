@@ -70,7 +70,7 @@ export default function HomeScreen({ navigation, route }) {
               "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
               "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day " +
               "FROM birthday_data) " +
-        // "WHERE name LIKE '%?%' " +
+        "WHERE name LIKE '%' || ? || '%' " +
         "ORDER BY month_has_past DESC, day_has_past DESC, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
         [search],
         (txObj, resultSet) => setPeople(resultSet.rows._array),
