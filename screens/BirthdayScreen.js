@@ -5,7 +5,7 @@ import * as SQLite from 'expo-sqlite'
 export default function BirthdayScreen({ navigation, route}) {
 
   const db = SQLite.openDatabase('Birthday_data.db')
-    const { name, birthday_month, birthday_day, notes, id } = route.params;
+  const { name, birthday_month, birthday_day, notes, id } = route.params;
 
   const deletePerson = (id) => {
     db.transaction(tx => {
@@ -14,34 +14,27 @@ export default function BirthdayScreen({ navigation, route}) {
     navigation.navigate("HomeScreen")
   }
 
-    return (
-        // <SafeAreaView style={styles.container}>  
-        // <Text>New Screen!</Text>
-        
-        // <Button title="press me" onPress={() => navigation.goBack()}/>
-        // <Button title="Delete entry" onPress={() => {deletePerson(id)}}/>
-        // </SafeAreaView>
-        <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
-          <View style={styles.container}>
-            <View style={styles.innerPlacard}>
-              <TouchableHighlight style={styles.deleteButton} underlayColor='#f00' onPress={() => {deletePerson(id)}}>
-                <Text style={styles.buttonText}>Delete</Text>
-              </TouchableHighlight>
-              <View style={styles.allButBottomButton}>
-                <View style={styles.placeholderImage}/>
-                <Text style={{fontSize: 40, paddingTop:10}}>{name}</Text>
-                <Text style={{fontSize: 40, paddingTop:5}}>{birthday_month}</Text>
-                <Text style={{fontSize: 40, paddingTop:5}}>{birthday_day}</Text>
-                <Text style={{fontSize: 20, paddingTop:5}}>{notes}</Text>
-              </View>
-              <TouchableHighlight style={styles.createButton} onPress={() => navigation.navigate("HomeScreen")}>
-                <Text style={styles.buttonText}>Go Back</Text>
-              </TouchableHighlight>
-              </View>
-            </View>
-        </ImageBackground>
-        
-    );
+  return (
+    <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
+      <View style={styles.container}>
+        <View style={styles.innerPlacard}>
+          <TouchableHighlight style={styles.deleteButton} underlayColor='#f00' onPress={() => {deletePerson(id)}}>
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableHighlight>
+          <View style={styles.allButBottomButton}>
+          <View style={styles.placeholderImage}/>
+          <Text style={{fontSize: 40, paddingTop:10}}>{name}</Text>
+          <Text style={{fontSize: 40, paddingTop:5}}>{birthday_month}</Text>
+          <Text style={{fontSize: 40, paddingTop:5}}>{birthday_day}</Text>
+          <Text style={{fontSize: 20, paddingTop:5}}>{notes}</Text>
+        </View>
+        <TouchableHighlight style={styles.createButton} onPress={() => navigation.navigate("HomeScreen")}>
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableHighlight>
+        </View>
+      </View>
+    </ImageBackground>
+  );
 }
 
 const styles = StyleSheet.create({

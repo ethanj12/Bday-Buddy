@@ -15,7 +15,6 @@ Notifications.setNotificationHandler({
 });
 
 export default function HomeScreen({ navigation, route }) {
-
   const db = SQLite.openDatabase('Birthday_data.db');
   const [people, setPeople] = useState([]);
   const [expoPushToken, setExpoPushToken] = useState("");
@@ -30,8 +29,9 @@ export default function HomeScreen({ navigation, route }) {
     db.transaction(tx => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS birthday_data (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, birthday_month TEXT, birthday_day TEXT, notes TEXT)'
-      )})
-    }; 
+      )}
+    )
+  }; 
 
   useEffect(() => {
     createTable();
@@ -44,10 +44,8 @@ export default function HomeScreen({ navigation, route }) {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        
+      Notifications.addNotificationResponseReceivedListener((response) => { 
       });
-
     return () => {
       Notifications.removeNotificationSubscription(
         notificationListener.current
@@ -58,21 +56,22 @@ export default function HomeScreen({ navigation, route }) {
 
   useFocusEffect(() => { //This might be running SQL every render. Def not best use of resources 0_0
     db.transaction(tx => {
-      tx.executeSql("SELECT *, " +
-        "CASE WHEN CAST(birthday_month AS INTEGER) >= curr_month " +
-          "THEN 1 " +
-          "ELSE 0 " +
-          "END AS month_has_past ," +
-        "CASE WHEN CAST(birthday_day AS INTEGER) >= curr_day " +
-          "THEN 1 " +
-          "ELSE 0 " +
-          "END AS day_has_past " +
-        "FROM (SELECT *, " +
-              "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
-              "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day " +
-              "FROM birthday_data) " +
-        "WHERE name LIKE '%' || ? || '%' " +
-        "ORDER BY month_has_past DESC, day_has_past DESC, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
+      tx.executeSql(
+        "SELECT *, " +
+          "CASE WHEN CAST(birthday_month AS INTEGER) >= curr_month " +
+            "THEN 1 " +
+            "ELSE 0 " +
+            "END AS month_has_past ," +
+          "CASE WHEN CAST(birthday_day AS INTEGER) >= curr_day " +
+            "THEN 1 " +
+            "ELSE 0 " +
+            "END AS day_has_past " +
+          "FROM (SELECT *, " +
+                "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
+                "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day " +
+                "FROM birthday_data) " +
+          "WHERE name LIKE '%' || ? || '%' " +
+          "ORDER BY month_has_past DESC, day_has_past DESC, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
         [search],
         (txObj, resultSet) => setPeople(resultSet.rows._array),
         (txObj, error) => console.log(error)
@@ -82,30 +81,27 @@ export default function HomeScreen({ navigation, route }) {
 
   const showScrollNames = () => {
     return people.map((item) => {
-      // console.log(item.month)
       return (
-      <TouchableOpacity  key={String(item.id)} style={styles.item} 
-        onPress={() => navigation.navigate("BirthdayScreen", 
-        {name: item.name,
-        birthday_month: item.birthday_month,
-        birthday_day: item.birthday_day,
-        notes: item.notes,
-        id: item.id})}>
-          <Text style={{flex: 1, fontSize:35}}>{item.name}</Text>
-          <Text style={{fontSize:35}}>{item.birthday_month} / {item.birthday_day}</Text>
-      </TouchableOpacity >
+        <TouchableOpacity  key={String(item.id)} style={styles.item} 
+          onPress={() => navigation.navigate("BirthdayScreen", 
+          {name: item.name,
+          birthday_month: item.birthday_month,
+          birthday_day: item.birthday_day,
+          notes: item.notes,
+          id: item.id})}>
+            <Text style={{flex: 1, fontSize:35}}>{item.name}</Text>
+            <Text style={{fontSize:35}}>{item.birthday_month} / {item.birthday_day}</Text>
+        </TouchableOpacity >
       ) 
     })
   }
   return (
     <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
-      <View style={styles.container}>
-        
-      <Button title="Schedule" onPress={() => {schedulePushNotification()}}/>
-      <View style={styles.searchBarView}>
-        <TextInput placeholder='Search' style={styles.searchBar} onChangeText={setSearch}/>
-      </View>
-        
+      <View style={styles.container}> 
+        <Button title="Schedule" onPress={() => {schedulePushNotification()}}/>
+        <View style={styles.searchBarView}>
+          <TextInput placeholder='Search' style={styles.searchBar} onChangeText={setSearch}/>
+        </View>
         <ScrollView style={styles.scrollView}>
           {showScrollNames()}
         </ScrollView>

@@ -7,11 +7,11 @@ import React, { useState } from 'react'
 const days_in_month = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 export default function CreateBirthdayScreen({ navigation, route }) {
-    const db = SQLite.openDatabase('Birthday_data.db')
-    const [name, setName] = useState('');
-    const [notes, setNotes] = useState('');
-    const [month, setMonth] = useState('');
-    const [day, setDay] = useState('');
+  const db = SQLite.openDatabase('Birthday_data.db')
+  const [name, setName] = useState('');
+  const [notes, setNotes] = useState('');
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
 
   const errorCheck = () => {
     if (name.length == 0){
@@ -35,53 +35,51 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   const addName = () => {
     if(errorCheck()) {
       db.transaction(tx => {
-            tx.executeSql('INSERT INTO birthday_data ( name, birthday_month, birthday_day, notes ) VALUES (?,?,?,?)', [name, month, day, notes])
-          });
-          navigation.navigate("HomeScreen");
+        tx.executeSql('INSERT INTO birthday_data ( name, birthday_month, birthday_day, notes ) VALUES (?,?,?,?)', [name, month, day, notes])
+      });
+      navigation.navigate("HomeScreen");
     }
   }
-    return (
-        <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
-          <View style={styles.container}>
-            {/* <View style={styles.innerPlacard}> */}
-              <TouchableHighlight style={styles.goBackButton} onPress={() => navigation.navigate("HomeScreen")}>
-                <Text style={styles.buttonText}>Go Back</Text>
-              </TouchableHighlight>
-              <View style={styles.allButBottomButton}>
-                <View style={styles.placeholderImage}/>
-                    <TextInput 
-                    placeholder='Name'
-                    style={styles.nameInput}
-                    onChangeText={setName}/>
-                    <View style={styles.monthdayInput}>
-                      <TextInput 
-                        placeholder='Month'
-                        onChangeText={setMonth}
-                        style={styles.monthInput}
-                        keyboardType='numeric'
-                        returnKeyType='done'/>
-                      <Text style={{fontSize:40, color:'#fff', alignSelf: 'center'}}> / </Text>
-                      <TextInput 
-                        placeholder='Day'
-                        onChangeText={setDay}
-                        style={styles.dayInput}
-                        keyboardType='numeric'
-                        returnKeyType='done'/>
-                    </View>
-                    <TextInput
-                      placeholder='Notes for gifts'
-                      multiline
-                      style={styles.notesInput}
-                      onChangeText={setNotes}
-                    /> 
-                </View>
-              <TouchableHighlight style={styles.createButton} underlayColor='rgba(37, 84, 10, 1)' onPress={() => {addName()}}>
-                <Text style={styles.buttonText}>Create</Text>
-              </TouchableHighlight>
-            {/* </View>    */}
+  return (
+  <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
+    <View style={styles.container}>
+      <TouchableHighlight style={styles.goBackButton} onPress={() => navigation.navigate("HomeScreen")}>
+        <Text style={styles.buttonText}>Go Back</Text>
+      </TouchableHighlight>
+      <View style={styles.allButBottomButton}>
+        <View style={styles.placeholderImage}/>
+        <TextInput 
+          placeholder='Name'
+          style={styles.nameInput}
+          onChangeText={setName}/>
+        <View style={styles.monthdayInput}>
+          <TextInput 
+            placeholder='Month'
+            onChangeText={setMonth}
+            style={styles.monthInput}
+            keyboardType='numeric'
+            returnKeyType='done'/>
+          <Text style={{fontSize:40, color:'#fff', alignSelf: 'center'}}> / </Text>
+          <TextInput 
+            placeholder='Day'
+            onChangeText={setDay}
+            style={styles.dayInput}
+            keyboardType='numeric'
+            returnKeyType='done'/>
           </View>
-        </ImageBackground>
-    );
+        <TextInput
+          placeholder='Notes for gifts'
+          multiline
+          style={styles.notesInput}
+          onChangeText={setNotes}
+        /> 
+        </View>
+      <TouchableHighlight style={styles.createButton} underlayColor='rgba(37, 84, 10, 1)' onPress={() => {addName()}}>
+        <Text style={styles.buttonText}>Create</Text>
+      </TouchableHighlight>
+    </View>
+  </ImageBackground>
+  );
 }
 
 const styles = StyleSheet.create({
