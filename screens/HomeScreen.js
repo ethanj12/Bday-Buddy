@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, Button, TouchableOpacity  } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, Button, TouchableOpacity, TouchableHighlight, TextInput  } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react'
 import { useFocusEffect  } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite'
@@ -20,8 +20,10 @@ export default function HomeScreen({ navigation, route }) {
   const [people, setPeople] = useState([]);
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
+  const [search, setSearch] = useState('')
   const notificationListener = useRef();
   const responseListener = useRef();
+
 
   const createTable = () => {
     db.transaction(tx => {
@@ -68,8 +70,9 @@ export default function HomeScreen({ navigation, route }) {
               "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
               "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day " +
               "FROM birthday_data) " +
+        // "WHERE name LIKE '%?%' " +
         "ORDER BY month_has_past DESC, day_has_past DESC, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
-        null,
+        [search],
         (txObj, resultSet) => setPeople(resultSet.rows._array),
         (txObj, error) => console.log(error)
       )
@@ -81,30 +84,34 @@ export default function HomeScreen({ navigation, route }) {
       // console.log(item.month)
       return (
       <TouchableOpacity  key={String(item.id)} style={styles.item} 
-      onPress={() => navigation.navigate("BirthdayScreen", 
-      {name: item.name,
-      birthday_month: item.birthday_month,
-      birthday_day: item.birthday_day,
-      notes: item.notes,
-      id: item.id})}>
-        <Text style={{flex: 1, fontSize:35}}>{item.name}</Text>
-        <Text style={{fontSize:35}}>{item.birthday_month} / {item.birthday_day}</Text>
+        onPress={() => navigation.navigate("BirthdayScreen", 
+        {name: item.name,
+        birthday_month: item.birthday_month,
+        birthday_day: item.birthday_day,
+        notes: item.notes,
+        id: item.id})}>
+          <Text style={{flex: 1, fontSize:35}}>{item.name}</Text>
+          <Text style={{fontSize:35}}>{item.birthday_month} / {item.birthday_day}</Text>
       </TouchableOpacity >
       ) 
     })
   }
   return (
-    <ImageBackground source={{uri: 'https://i.pinimg.com/236x/99/d9/54/99d954303bc7de063b545cd1ad3f34d3.jpg'}} style={styles.imageBackground}>
+    <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
       <View style={styles.container}>
-        {/* <Button title="Create" style={styles.button} onPress={() => navigation.navigate("CreateBirthdayScreen")}/> */}
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("CreateBirthdayScreen")}>
-          <Text style={styles.buttonText}>Add Birthday</Text>
-        </TouchableOpacity>
+        
+      <Button title="Schedule" onPress={() => {schedulePushNotification()}}/>
+      <View style={styles.searchBarView}>
+        <TextInput placeholder='Search' style={styles.searchBar} onChangeText={setSearch}/>
+      </View>
+        
         <ScrollView style={styles.scrollView}>
           {showScrollNames()}
         </ScrollView>
         <StatusBar style="auto" />
-        <Button title="Schedule" onPress={() => {schedulePushNotification()}}/>
+        <TouchableHighlight style={styles.button} onPress={() => navigation.navigate("CreateBirthdayScreen")}>
+          <Text style={styles.buttonText}>Add Birthday</Text>
+        </TouchableHighlight>
       </View>
     </ImageBackground>
         
@@ -164,23 +171,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  searchBarView: {
+    backgroundColor: "#fff",
+    height: 50,
+    borderRadius: 50,
+    width: '95%',
+    marginBottom: 10,
+    borderColor: '#000',
+    borderWidth: 2
+  },
+  searchBar: {
+    height: '100%',
+    fontSize: 24,
+    textAlign: 'center'
+  },
   container: {
     flex: 1,
     marginTop: '15%',
     marginBottom: '10%',
     paddingTop: 10,
     width: '95%',
-    backgroundColor: '#fff',
     opacity: 0.9,
     borderRadius: 10,
-    flexDirection: 'column-reverse',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center'
   },
   button : {
     color: "#fff",
     height: 100,
-    width: '100%',
+    width: '95%',
     backgroundColor: '#000',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
@@ -194,14 +214,19 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: '100%',
+    paddingBottom: 10
   },
   item : {
     width: '95%',
-    marginTop: 8,
+    marginTop: 4,
+    marginBottom: 4,
     padding: 20,
-    backgroundColor: 'pink',
+    backgroundColor: '#fff',
+    borderRadius: 5,
     fontSize: 24,
     flexDirection: 'row',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    borderColor: '#000',
+    borderWidth: 2
   }
 });

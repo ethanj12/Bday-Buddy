@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, StatusBar, Button, TouchableOpacity, ImageBackground  } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, StatusBar, Button, TouchableHighlight, ImageBackground  } from 'react-native';
 import React, { useState } from 'react'
 import * as SQLite from 'expo-sqlite'
 
@@ -21,12 +21,12 @@ export default function BirthdayScreen({ navigation, route}) {
         // <Button title="press me" onPress={() => navigation.goBack()}/>
         // <Button title="Delete entry" onPress={() => {deletePerson(id)}}/>
         // </SafeAreaView>
-        <ImageBackground source={{uri: 'https://i.pinimg.com/236x/99/d9/54/99d954303bc7de063b545cd1ad3f34d3.jpg'}} style={styles.imageBackground}>
+        <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
           <View style={styles.container}>
             <View style={styles.innerPlacard}>
-              <TouchableOpacity style={styles.deleteButton} onPress={() => {deletePerson(id)}}>
+              <TouchableHighlight style={styles.deleteButton} underlayColor='#f00' onPress={() => {deletePerson(id)}}>
                 <Text style={styles.buttonText}>Delete</Text>
-              </TouchableOpacity>
+              </TouchableHighlight>
               <View style={styles.allButBottomButton}>
                 <View style={styles.placeholderImage}/>
                 <Text style={{fontSize: 40, paddingTop:10}}>{name}</Text>
@@ -34,9 +34,9 @@ export default function BirthdayScreen({ navigation, route}) {
                 <Text style={{fontSize: 40, paddingTop:5}}>{birthday_day}</Text>
                 <Text style={{fontSize: 20, paddingTop:5}}>{notes}</Text>
               </View>
-              <TouchableOpacity style={styles.createButton} onPress={() => navigation.navigate("HomeScreen")}>
+              <TouchableHighlight style={styles.createButton} onPress={() => navigation.navigate("HomeScreen")}>
                 <Text style={styles.buttonText}>Go Back</Text>
-              </TouchableOpacity>
+              </TouchableHighlight>
               </View>
             </View>
         </ImageBackground>

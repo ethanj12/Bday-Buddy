@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Alert, ImageBackground, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Alert, ImageBackground, TouchableOpacity, TouchableHighlight} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as SQLite from 'expo-sqlite'
 import React, { useState } from 'react'
@@ -42,40 +42,44 @@ export default function CreateBirthdayScreen({ navigation, route }) {
     }
   }
     return (
-        <ImageBackground source={{uri: 'https://i.pinimg.com/236x/99/d9/54/99d954303bc7de063b545cd1ad3f34d3.jpg'}} style={styles.imageBackground}>
+        <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
           <View style={styles.container}>
-            <View style={styles.innerPlacard}>
-              <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.navigate("HomeScreen")}>
+            {/* <View style={styles.innerPlacard}> */}
+              <TouchableHighlight style={styles.goBackButton} onPress={() => navigation.navigate("HomeScreen")}>
                 <Text style={styles.buttonText}>Go Back</Text>
-              </TouchableOpacity>
+              </TouchableHighlight>
               <View style={styles.allButBottomButton}>
                 <View style={styles.placeholderImage}/>
                     <TextInput 
                     placeholder='Name'
-                    style={{height: 50, fontSize: 24, backgroundColor:'#fff', textAlign: 'center', width:250}}
+                    style={styles.nameInput}
                     onChangeText={setName}/>
-                    <View>
+                    <View style={styles.monthdayInput}>
                       <TextInput 
                         placeholder='Month'
                         onChangeText={setMonth}
+                        style={styles.monthInput}
                         keyboardType='numeric'
                         returnKeyType='done'/>
+                      <Text style={{fontSize:40, color:'#fff', alignSelf: 'center6'}}> / </Text>
                       <TextInput 
                         placeholder='Day'
                         onChangeText={setDay}
+                        style={styles.dayInput}
                         keyboardType='numeric'
                         returnKeyType='done'/>
                     </View>
                     <TextInput
                       placeholder='Notes for gifts'
-                      style={{height: 90, width: 250, backgroundColor:'#fff', textAlign: 'center'}}
+                      multiline
+                      style={styles.notesInput}
                       onChangeText={setNotes}
                     /> 
                 </View>
-              <TouchableOpacity style={styles.createButton} onPress={() => {addName()}}>
+              <TouchableHighlight style={styles.createButton} underlayColor='rgba(37, 84, 10, 1)' onPress={() => {addName()}}>
                 <Text style={styles.buttonText}>Create</Text>
-              </TouchableOpacity>
-            </View>   
+              </TouchableHighlight>
+            {/* </View>    */}
           </View>
         </ImageBackground>
     );
@@ -86,6 +90,13 @@ const styles = StyleSheet.create({
     flex:1,
     alignItems: 'center'
   },
+  notesInput : {
+    height: 90, 
+    width: '100%', 
+    backgroundColor:'#fff', 
+    textAlign: 'justify',
+    width: 300
+  },
   imageBackground: {
     width: '100%',
     height: '100%',
@@ -93,6 +104,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  nameInput: {
+    height: 50, 
+    fontSize: 24, 
+    backgroundColor:'#fff', 
+    textAlign: 'center', 
+    width: 300,
+    marginBottom: 20
+  },
+  monthdayInput: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    height: 50,
+    width: 300,
+    justifyContent: 'space-between',
+  },
+  monthInput: {
+    backgroundColor: '#fff',
+    textAlign: 'center', 
+    width: '45%',
+    fontSize: 24,
+  },
+  dayInput: {
+    backgroundColor: '#fff',
+    textAlign: 'center', 
+    width: '45%',
+    fontSize: 24,
+  },  
   goBackButton : {
     height: 50,
     width: '100%',
@@ -116,21 +154,13 @@ const styles = StyleSheet.create({
     color:'#fff',
     fontSize: 25,
   },
-  innerPlacard : {
-    backgroundColor: "#555",
-    height: '80%',
-    width: "80%",
-    borderRadius: 10,
-    alignItems: 'center'
-  },
   container: {
     flex: 1,
-    marginTop: '30%',
-    marginBottom: '20%',
-    paddingTop: 10,
+    marginTop: '15%',
+    marginBottom: '40%',
     width: '95%',
     height: '80%',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center'
@@ -138,6 +168,7 @@ const styles = StyleSheet.create({
   placeholderImage : {
     height: 250,
     width: 250,
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    marginBottom: 20
   }
 });
