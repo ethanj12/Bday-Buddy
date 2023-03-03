@@ -58,20 +58,19 @@ export default function HomeScreen({ navigation, route }) {
     db.transaction(tx => {
       tx.executeSql(
         "SELECT *, " +
-          "CASE WHEN CAST(birthday_month AS INTEGER) >= curr_month " +
-            "THEN 1 " +
-            "ELSE 0 " +
-            "END AS month_has_past ," +
-          "CASE WHEN CAST(birthday_day AS INTEGER) >= curr_day " +
-            "THEN 1 " +
-            "ELSE 0 " +
-            "END AS day_has_past " +
+          "CASE  WHEN CAST(birthday_month AS INTEGER) > curr_month THEN  3 " +
+                "WHEN CAST(birthday_month AS INTEGER) < curr_month THEN  4 " +
+                "WHEN CAST(birthday_month AS INTEGER) = curr_month AND CAST(birthday_day AS INTEGER) = curr_day THEN 1 " +
+                "WHEN CAST(birthday_month AS INTEGER) = curr_month AND CAST(birthday_day AS INTEGER) > curr_day THEN 2 " +
+                "WHEN CAST(birthday_month AS INTEGER) = curr_month AND CAST(birthday_day AS INTEGER) < curr_day THEN 5 " +
+                "ELSE 0 " +
+                "END AS month_has_past " +
           "FROM (SELECT *, " +
-                "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
-                "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day " +
-                "FROM birthday_data) " +
-          "WHERE name LIKE '%' || ? || '%' " +
-          "ORDER BY month_has_past DESC, day_has_past DESC, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
+               "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
+               "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day "  +
+               "FROM birthday_data)  " +
+          // "WHERE name LIKE '%' || '?' || '%'  " +
+          "ORDER BY month_has_past, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
         [search],
         (txObj, resultSet) => setPeople(resultSet.rows._array),
         (txObj, error) => console.log(error)
@@ -98,7 +97,7 @@ export default function HomeScreen({ navigation, route }) {
   return (
     <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
       <View style={styles.container}> 
-        <Button title="Schedule" onPress={() => {schedulePushNotification()}}/>
+        <Button title="Schedule" onPress={() => {schedulePushNotification(expoPushToken, people)}}/>
         <View style={styles.searchBarView}>
           <TextInput placeholder='Search' style={styles.searchBar} onChangeText={setSearch}/>
         </View>
@@ -116,15 +115,31 @@ export default function HomeScreen({ navigation, route }) {
 }
 
 
-async function schedulePushNotification(expoPushToken) {
+async function schedulePushNotification(expoPushToken, people) {
+  const year = new Date().getFullYear();
+  let birthday_date = new Date(year, people[0].birthday_month - 1, people[0].birthday_day);
+  const hour_target = 2;
+  const minute_target = 45;
+  birthday_date = birthday_date.getTime();
+  console.log((new Date(birthday_date + 10800000)))
+  // console.log("Curr TIme");
+  // console.log((new Date()));
+  // console.log("Curr TIme in Unix");
+  // console.log((new Date()).getTime());
+  // console.log("Time notifcation will be sent")
+  // console.log(birthday_date + (hour_target * 60 * 60 * 1000) + (minute_target * 60 * 1000));
+  // console.log('Time till sent:');
+  // console.log(birthday_date - (hour_target * 60 * 60 * 1000) - (minute_target * 60 * 1000) - (new Date()).getTime())
+  console.log(birthday_date + 10800000)
+
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "You've got mail! 📬",
-      body: 'Here is the notification body' + {expoPushToken},
-      data: { data: 'goes here' },
-      sound: 'default'
+      body: 'Here is the notification body' + birthday_date,
+      data: { data: expoPushToken },
+      sound: 'HORNCele_Party horn 4 (ID 1556)_BSB.wav'
     },
-    trigger: { seconds: 10 },
+    trigger: { date : birthday_date + 10800000}
   });
 }
 
