@@ -35,7 +35,7 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   const addName = () => {
     if(errorCheck()) {
       db.transaction(tx => {
-        tx.executeSql('INSERT INTO birthday_data ( name, birthday_month, birthday_day, notes ) VALUES (?,?,?,?)', [name, month, day, notes])
+        tx.executeSql('INSERT INTO birthday_data ( name, birthday_month, birthday_day, notes, hasNotification ) VALUES (?,?,?,?,?)', [name, month, day, notes, 0])
       });
       navigation.navigate("HomeScreen");
     }

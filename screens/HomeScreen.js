@@ -25,12 +25,43 @@ export default function HomeScreen({ navigation, route }) {
   const responseListener = useRef();
 
 
+  for(let i = 0; i < people.length; i++) {
+    let scheduled_noti = false;
+    db.transaction(tx => {
+      tx.executeSql(
+        "SELECT * FROM birthday_data WHERE id = ?"
+        [people[i].id],
+        (txObj, resultSet) => resultSet.rows._array[0].hasNotification == 1 ? console.log("True") : scheduled_noti = console.log("false"),
+        (txObj, error) => console.log(error)
+      )
+    });
+    console.log(scheduled_noti)
+    if (scheduled_noti) {
+      schedulePushNotification(expoPushToken, people[i]);
+      console.log("Updating Table")
+      db.transaction(tx => {
+        tx.executeSql(
+          "UPDATE birthday_data SET hasNotification = 1 WHERE id = ?"
+          [people[i].id],
+          (txObj, resultSet) => console.log("Notification Success"),
+          (txObj, error) => console.log(error)
+        )
+      });
+    }
+    console.log(people[i])
+  };
+
   const createTable = () => {
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS birthday_data (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, birthday_month TEXT, birthday_day TEXT, notes TEXT)'
+        'CREATE TABLE IF NOT EXISTS birthday_data (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, birthday_month TEXT, birthday_day TEXT, notes TEXT, hasNotification INTEGER)'
       )}
     )
+    // db.transaction(tx => {
+    //   tx.executeSql(
+    //     'DROP TABLE birthday_data' //USED IN DEVELOPMENT IN ORDER TO CLEAR DATA FROM TABLES IF NEED TO MAKE CHANGES TO TABLE STRUCTURE
+    //   )}
+    // )
   }; 
 
   useEffect(() => {
@@ -46,13 +77,15 @@ export default function HomeScreen({ navigation, route }) {
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => { 
       });
+    
+    
     return () => {
       Notifications.removeNotificationSubscription(
         notificationListener.current
       );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);
+  }, [people]);
 
   useFocusEffect(() => { //This might be running SQL every render. Def not best use of resources 0_0
     db.transaction(tx => {
@@ -69,7 +102,7 @@ export default function HomeScreen({ navigation, route }) {
                "CAST(strftime(\'%m\', DATE(\'now\')) AS INTEGER) AS curr_month, " +
                "CAST(strftime(\'%d\', DATE(\'now\')) AS INTEGER) AS curr_day "  +
                "FROM birthday_data)  " +
-          // "WHERE name LIKE '%' || '?' || '%'  " +
+               "WHERE name LIKE '%' || ? || '%' " +
           "ORDER BY month_has_past, CAST(birthday_month AS INTEGER), CAST(birthday_day AS INTEGER)",
         [search],
         (txObj, resultSet) => setPeople(resultSet.rows._array),
@@ -115,29 +148,18 @@ export default function HomeScreen({ navigation, route }) {
 }
 
 
-async function schedulePushNotification(expoPushToken, people) {
+async function schedulePushNotification(expoPushToken, person) {
   const year = new Date().getFullYear();
-  let birthday_date = new Date(year, people[0].birthday_month - 1, people[0].birthday_day);
-  const hour_target = 2;
-  const minute_target = 45;
+  let birthday_date = new Date(year, person.birthday_month - 1, person.birthday_day);
   birthday_date = birthday_date.getTime();
-  console.log((new Date(birthday_date + 10800000)))
-  // console.log("Curr TIme");
-  // console.log((new Date()));
-  // console.log("Curr TIme in Unix");
-  // console.log((new Date()).getTime());
-  // console.log("Time notifcation will be sent")
-  // console.log(birthday_date + (hour_target * 60 * 60 * 1000) + (minute_target * 60 * 1000));
-  // console.log('Time till sent:');
-  // console.log(birthday_date - (hour_target * 60 * 60 * 1000) - (minute_target * 60 * 1000) - (new Date()).getTime())
-  console.log(birthday_date + 10800000)
+  // console.log(birthday_date + 10800000); //Time defaults to 5 am when make date. Don't know why, but must add 3 hours or ms for noti at 8am
 
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "You've got mail! 📬",
       body: 'Here is the notification body' + birthday_date,
       data: { data: expoPushToken },
-      sound: 'HORNCele_Party horn 4 (ID 1556)_BSB.wav'
+      sound: 'default'
     },
     trigger: { date : birthday_date + 10800000}
   });
