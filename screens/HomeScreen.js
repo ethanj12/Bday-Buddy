@@ -26,29 +26,16 @@ export default function HomeScreen({ navigation, route }) {
 
 
   for(let i = 0; i < people.length; i++) {
-    let scheduled_noti = false;
     db.transaction(tx => {
       tx.executeSql(
-        "SELECT * FROM birthday_data WHERE id = ?"
+        "SELECT * FROM birthday_data WHERE id = ?",
         [people[i].id],
-        (txObj, resultSet) => resultSet.rows._array[0].hasNotification == 1 ? console.log("True") : scheduled_noti = console.log("false"),
+        (txObj, resultSet) => {
+          resultSet.rows._array[0].hasNotification == 0 ? schedulePushNotification(expoPushToken, resultSet.rows._array[0], db) : null
+        },
         (txObj, error) => console.log(error)
       )
     });
-    console.log(scheduled_noti)
-    if (scheduled_noti) {
-      schedulePushNotification(expoPushToken, people[i]);
-      console.log("Updating Table")
-      db.transaction(tx => {
-        tx.executeSql(
-          "UPDATE birthday_data SET hasNotification = 1 WHERE id = ?"
-          [people[i].id],
-          (txObj, resultSet) => console.log("Notification Success"),
-          (txObj, error) => console.log(error)
-        )
-      });
-    }
-    console.log(people[i])
   };
 
   const createTable = () => {
@@ -148,11 +135,11 @@ export default function HomeScreen({ navigation, route }) {
 }
 
 
-async function schedulePushNotification(expoPushToken, person) {
+async function schedulePushNotification(expoPushToken, person, db) {
+  console.log("Here")
   const year = new Date().getFullYear();
   let birthday_date = new Date(year, person.birthday_month - 1, person.birthday_day);
-  birthday_date = birthday_date.getTime();
-  // console.log(birthday_date + 10800000); //Time defaults to 5 am when make date. Don't know why, but must add 3 hours or ms for noti at 8am
+  birthday_date = birthday_date.getTime() + 10800000; //Time defaults to 5 am when make date. Don't know why, but must add 3 hours or ms for noti at 8am
 
   await Notifications.scheduleNotificationAsync({
     content: {
@@ -161,8 +148,17 @@ async function schedulePushNotification(expoPushToken, person) {
       data: { data: expoPushToken },
       sound: 'default'
     },
-    trigger: { date : birthday_date + 10800000}
-  });
+    trigger: { date : birthday_date }
+  }).then(
+    db.transaction(tx => {
+      tx.executeSql(
+        "UPDATE birthday_data SET hasNotification = 1 WHERE id = ?",
+        [person.id],
+        (txObj, resultSet) => console.log("Notification Success"),
+        (txObj, error) => console.log(error)
+      )
+    })
+  );
 }
 
 async function registerForPushNotificationsAsync() {
