@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, StatusBar, Button, TouchableHighlight, ImageBackground  } from 'react-native';
+import { Icon } from 'react-native-elements'
 import React, { useState } from 'react'
 import * as SQLite from 'expo-sqlite'
 
@@ -17,9 +18,10 @@ export default function BirthdayScreen({ navigation, route}) {
   return (
     <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
       <View style={styles.container}>
-        <TouchableHighlight style={styles.backButton} onPress={() => navigation.navigate("HomeScreen")}>
-          <Text style={styles.buttonText}>Go Back</Text>
-        </TouchableHighlight>
+        <View style={styles.backButton}>
+          <Icon type ='ionicon' name="arrow-back-outline" color="#fff" size={40} style={{marginLeft: 10, marginRight: 20}} onPress={() => navigation.navigate("HomeScreen")}/>
+          <Icon type ='material' name="edit" color="#fff" size={30} style={{marginLeft: 20, marginRight: 20}}/>
+        </View>
           <View style={styles.allButBottomButton}>
             <View style={styles.placeholderImage}/>
             <Text style={styles.nameStyle}>{name}</Text>
@@ -80,7 +82,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   deleteButton : {
     height: 50,

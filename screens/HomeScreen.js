@@ -1,4 +1,5 @@
-import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, TouchableHighlight, TextInput  } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, TouchableHighlight, TextInput } from 'react-native';
+import { Icon } from 'react-native-elements'
 import React, { useState, useEffect, useRef } from 'react'
 import { useFocusEffect  } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite'
@@ -119,6 +120,7 @@ export default function HomeScreen({ navigation, route }) {
     <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
       <View style={styles.container}> 
         <View style={styles.searchBarView}>
+          <Icon name="search" style={{marginLeft: 20, marginRight: 20}}/>
           <TextInput placeholder='Search' style={styles.searchBar} onChangeText={setSearch}/>
         </View>
         <ScrollView style={styles.scrollView}>
@@ -212,12 +214,16 @@ const styles = StyleSheet.create({
     width: '95%',
     marginBottom: 10,
     borderColor: '#000',
-    borderWidth: 2
+    borderWidth: 2,
+    flexDirection: 'row',
+    alignItems: 'center' 
   },
   searchBar: {
     height: '100%',
+    width: '80%',
     fontSize: 24,
-    textAlign: 'center'
+    textAlign: 'center',
+    textAlign: 'left'
   },
   container: {
     flex: 1,
