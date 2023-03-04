@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, Button, TouchableOpacity, TouchableHighlight, TextInput  } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, TouchableHighlight, TextInput  } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react'
 import { useFocusEffect  } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite'
@@ -18,8 +18,6 @@ export default function HomeScreen({ navigation, route }) {
   const db = SQLite.openDatabase('Birthday_data.db');
   const [people, setPeople] = useState([]);
   const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState(false);
-  const [hasUpdated, setHasUpdated] = useState(false);
   const [search, setSearch] = useState('')
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -101,23 +99,25 @@ export default function HomeScreen({ navigation, route }) {
   const showScrollNames = () => {
     return people.map((item) => {
       return (
-        <TouchableOpacity  key={String(item.id)} style={styles.item} 
+        <TouchableHighlight  key={String(item.id)} style={styles.item} 
           onPress={() => navigation.navigate("BirthdayScreen", 
           {name: item.name,
           birthday_month: item.birthday_month,
           birthday_day: item.birthday_day,
           notes: item.notes,
-          id: item.id})}>
-            <Text style={{flex: 1, fontSize:35}}>{item.name}</Text>
-            <Text style={{fontSize:35}}>{item.birthday_month} / {item.birthday_day}</Text>
-        </TouchableOpacity >
+          id: item.id})}
+          underlayColor={'rgba(0, 0, 0, 0)'}>
+            <View style={{flexDirection: 'row', alignContent: 'space-between'}}>
+              <Text style={{fontSize:35, width:'70%'}}>{item.name}</Text>
+              <Text style={{fontSize:35, width:'30%'}}>{item.birthday_month} / {item.birthday_day}</Text>
+            </View>
+        </TouchableHighlight >
       ) 
     })
   }
   return (
     <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
       <View style={styles.container}> 
-        <Button title="Schedule" onPress={() => {schedulePushNotification(expoPushToken, people)}}/>
         <View style={styles.searchBarView}>
           <TextInput placeholder='Search' style={styles.searchBar} onChangeText={setSearch}/>
         </View>
