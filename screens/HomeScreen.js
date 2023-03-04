@@ -136,9 +136,13 @@ export default function HomeScreen({ navigation, route }) {
 
 
 async function schedulePushNotification(expoPushToken, person, db) {
-  console.log("Here")
   const year = new Date().getFullYear();
   let birthday_date = new Date(year, person.birthday_month - 1, person.birthday_day);
+  const curr_date = new Date();
+  if (birthday_date < curr_date) {
+    birthday_date.setFullYear(year + 1);
+    console.log(birthday_date);
+  }
   birthday_date = birthday_date.getTime() + 10800000; //Time defaults to 5 am when make date. Don't know why, but must add 3 hours or ms for noti at 8am
 
   await Notifications.scheduleNotificationAsync({
