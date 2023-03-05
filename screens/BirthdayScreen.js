@@ -20,7 +20,12 @@ export default function BirthdayScreen({ navigation, route}) {
       <View style={styles.container}>
         <View style={styles.backButton}>
           <Icon type ='ionicon' name="arrow-back-outline" color="#fff" size={40} style={{marginLeft: 10, marginRight: 20}} onPress={() => navigation.navigate("HomeScreen")}/>
-          <Icon type ='material' name="edit" color="#fff" size={30} style={{marginLeft: 20, marginRight: 20}}/>
+          <Icon type ='material' name="edit" color="#fff" size={30} style={{marginLeft: 20, marginRight: 20}}
+          onPress={() => navigation.navigate("CreateBirthdayScreen",
+          {name_input: name,
+            month_input: birthday_month,
+            day_input: birthday_day,
+            notes_input: notes})}/>
         </View>
           <View style={styles.allButBottomButton}>
             <View style={styles.placeholderImage}/>

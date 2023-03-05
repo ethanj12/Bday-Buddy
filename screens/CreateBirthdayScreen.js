@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Alert, ImageBackground, TouchableOpacity, TouchableHighlight} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Icon } from 'react-native-elements'
 import * as SQLite from 'expo-sqlite'
 import React, { useState } from 'react'
 
@@ -7,11 +7,13 @@ import React, { useState } from 'react'
 const days_in_month = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 export default function CreateBirthdayScreen({ navigation, route }) {
+
+  const { name_input, month_input, day_input, notes_input } = route.params;
   const db = SQLite.openDatabase('Birthday_data.db')
-  const [name, setName] = useState('');
-  const [notes, setNotes] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
+  const [name, setName] = useState(name_input);
+  const [month, setMonth] = useState(month_input);
+  const [day, setDay] = useState(day_input);
+  const [notes, setNotes] = useState(notes_input);
 
   const errorCheck = () => {
     if (name.length == 0){
@@ -43,19 +45,21 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   return (
   <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
     <View style={styles.container}>
-      <TouchableHighlight style={styles.goBackButton} onPress={() => navigation.navigate("HomeScreen")}>
-        <Text style={styles.buttonText}>Go Back</Text>
-      </TouchableHighlight>
+    <View style={styles.backButton}>
+          <Icon type ='ionicon' name="arrow-back-outline" color="#fff" size={40} style={{marginLeft: 10, marginRight: 20}} onPress={() => navigation.navigate("HomeScreen")}/>
+        </View>
       <View style={styles.allButBottomButton}>
         <View style={styles.placeholderImage}/>
         <TextInput 
           placeholder='Name'
           style={styles.nameInput}
-          onChangeText={setName}/>
+          onChangeText={setName}
+          value={name}/>
         <View style={styles.monthdayInput}>
           <TextInput 
             placeholder='Month'
             onChangeText={setMonth}
+            value={month}
             style={styles.monthInput}
             keyboardType='numeric'
             returnKeyType='done'/>
@@ -63,6 +67,7 @@ export default function CreateBirthdayScreen({ navigation, route }) {
           <TextInput 
             placeholder='Day'
             onChangeText={setDay}
+            value={day}
             style={styles.dayInput}
             keyboardType='numeric'
             returnKeyType='done'/>
@@ -72,6 +77,7 @@ export default function CreateBirthdayScreen({ navigation, route }) {
           multiline
           style={styles.notesInput}
           onChangeText={setNotes}
+          value={notes}
         /> 
         </View>
       <TouchableHighlight style={styles.createButton} underlayColor='rgba(37, 84, 10, 1)' onPress={() => {addName()}}>
@@ -167,5 +173,17 @@ const styles = StyleSheet.create({
     width: 250,
     backgroundColor: '#000',
     marginBottom: 20
-  }
+  },
+  backButton : {
+    height: 50,
+    width: '100%',
+    backgroundColor: '#000',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
 });

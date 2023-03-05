@@ -127,7 +127,11 @@ export default function HomeScreen({ navigation, route }) {
           {showScrollNames()}
         </ScrollView>
         <StatusBar style="auto" />
-        <TouchableHighlight style={styles.button} onPress={() => navigation.navigate("CreateBirthdayScreen")}>
+        <TouchableHighlight style={styles.button} onPress={() => navigation.navigate("CreateBirthdayScreen",
+          {name_input: '',
+            month_input: '',
+            day_input: '',
+            notes_input: ''})}>
           <Text style={styles.buttonText}>Add Birthday</Text>
         </TouchableHighlight>
       </View>
