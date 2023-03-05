@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Alert, ImageBackground, TouchableOpacity, TouchableHighlight} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Alert, ImageBackground, TouchableOpacity, TouchableHighlight, KeyboardAvoidingView} from 'react-native';
 import { Icon } from 'react-native-elements'
 import * as SQLite from 'expo-sqlite'
 import React, { useState } from 'react'
@@ -15,6 +15,13 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   const [day, setDay] = useState(day_input);
   const [notes, setNotes] = useState(notes_input);
 
+  /* INPUTS: None
+  *  OUTPUTS: True if the input to the name and month/day textinput are valid, false otherwise
+  *  DESC: This is the error chekcing portion for the inputs of the create birthday screen. We want to check
+  *  whether the user has input anything invalid, like numbers in the name field or put a month above 12 (not a
+  *  valid month). If the user has input anything that does not fit the reuqirments, an alert shows to tell them to fix
+  *  the inputs of the TextInput fields of this screen.
+  */
   const errorCheck = () => {
     if (name.length == 0){
       Alert.alert('Invalid Name', 'Please enter name')
@@ -34,6 +41,12 @@ export default function CreateBirthdayScreen({ navigation, route }) {
     }
     return true;
   }
+  /* INPUTS: None
+  *  OUTPUTS: None
+  *  DESC: This function calls errorCheck(). If errorCheck() returns true, then this function executes sql to put the person entered
+  *  into the text input fields of this screen into the database of the app. This allows us to pull the information to the home screen, create notifcations,
+  *  and also edit/delete people in the future.
+  */
   const addName = () => {
     if(errorCheck()) {
       db.transaction(tx => {

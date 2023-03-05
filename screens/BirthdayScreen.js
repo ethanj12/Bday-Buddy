@@ -8,6 +8,12 @@ export default function BirthdayScreen({ navigation, route}) {
   const db = SQLite.openDatabase('Birthday_data.db')
   const { name, birthday_month, birthday_day, notes, id } = route.params;
 
+  /* INPUTS: ID to delete
+  *  OUTPUTS: None
+  *  DESC: Takes an id from to delete, executes a delete SQL query, and then navigates the user to the home screen.
+  *  this function is used for when the user clicks the delete button on this screen, wanting to delete this person from
+  *  the database of users.
+  */
   const deletePerson = (id) => {
     db.transaction(tx => {
       tx.executeSql('DELETE FROM birthday_data WHERE id = ?', [id])

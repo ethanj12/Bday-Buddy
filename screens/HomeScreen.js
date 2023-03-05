@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, TouchableHighlight, TextInput } from 'react-native';
+import { Animated, ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, TouchableHighlight, TextInput } from 'react-native';
 import { Icon } from 'react-native-elements'
 import React, { useState, useEffect, useRef } from 'react'
 import { useFocusEffect  } from '@react-navigation/native';
@@ -7,6 +7,10 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import * as Application from 'expo-application';
 
+/* INPUTS: NONE
+  *  OUTPUTS:  NONE
+  *  DESC: Sets up the notification handler with all of the valid options. Changing these fields will change how notifications are presented on the device.
+  */
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -23,7 +27,10 @@ export default function HomeScreen({ navigation, route }) {
   const notificationListener = useRef();
   const responseListener = useRef();
 
-
+  /* 
+  *  DESC: THis for loops checks if we have already created a notification for this person's birthday. We loop over each person,
+  *  and if no notifcation has been set, then calls the schedulePushNotification() function
+  */
   for(let i = 0; i < people.length; i++) {
     db.transaction(tx => {
       tx.executeSql(
@@ -37,17 +44,17 @@ export default function HomeScreen({ navigation, route }) {
     });
   };
 
+  /* INPUTS: None
+  *  OUTPUTS: None
+  *  DESC: Executes a SQL query to create the database table if there was not one found. This should only be the case for the first time that the user
+  *  opens the app. After this, this code should not execute because the database will already have been created.
+  */
   const createTable = () => {
     db.transaction(tx => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS birthday_data (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, birthday_month TEXT, birthday_day TEXT, notes TEXT, hasNotification INTEGER)'
       )}
     )
-    // db.transaction(tx => {
-    //   tx.executeSql(
-    //     'DROP TABLE birthday_data' //USED IN DEVELOPMENT IN ORDER TO CLEAR DATA FROM TABLES IF NEED TO MAKE CHANGES TO TABLE STRUCTURE
-    //   )}
-    // )
   }; 
 
   useEffect(() => {
@@ -140,14 +147,18 @@ export default function HomeScreen({ navigation, route }) {
   );
 }
 
-
+/* INPUTS:  The valid expo push token used to authorize notifications, the person to scheudle the notification for (as a dict), and the database we use
+  *  OUTPUTS:None
+  *  DESC: This function takes in a person to create a notification for.  It creates a date based off of the birthday_month and birthday_day in the database
+  *  and from there creates a date object to pass to the notification handler. If the date has already passed this year, then a year is added to the 
+  *  date and the notification is scheduled for next year. Then the database is updated when a notification was successfuly scheduled.
+  */
 async function schedulePushNotification(expoPushToken, person, db) {
   const year = new Date().getFullYear();
   let birthday_date = new Date(year, person.birthday_month - 1, person.birthday_day);
   const curr_date = new Date();
   if (birthday_date < curr_date) {
     birthday_date.setFullYear(year + 1);
-    console.log(birthday_date);
   }
   birthday_date = birthday_date.getTime() + 10800000; //Time defaults to 5 am when make date. Don't know why, but must add 3 hours or ms for noti at 8am
 
@@ -171,6 +182,11 @@ async function schedulePushNotification(expoPushToken, person, db) {
   );
 }
 
+/* INPUTS: None
+  *  OUTPUTS: None
+  *  DESC: Handles a lot of the nitty gritty of notication permissions. Detects the type of device used by the user and then gets the valid
+  *  persmissions and tokens needed in order to sent the user notifcations
+  */
 async function registerForPushNotificationsAsync() {
   let token;
 
