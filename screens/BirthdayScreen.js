@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, StatusBar, Button, TouchableHighlight, ImageBackground  } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, StatusBar, Button, TouchableHighlight, ImageBackground,  } from 'react-native';
 import { Icon } from 'react-native-elements'
 import React, { useState } from 'react'
 import * as SQLite from 'expo-sqlite'
@@ -6,7 +6,7 @@ import * as SQLite from 'expo-sqlite'
 export default function BirthdayScreen({ navigation, route}) {
 
   const db = SQLite.openDatabase('Birthday_data.db')
-  const { name, birthday_month, birthday_day, notes, id } = route.params;
+  const { name, birthday_month, birthday_day, notes, id, image } = route.params;
 
   /* INPUTS: ID to delete
   *  OUTPUTS: None
@@ -15,10 +15,13 @@ export default function BirthdayScreen({ navigation, route}) {
   *  the database of users.
   */
   const deletePerson = (id) => {
-    db.transaction(tx => {
-      tx.executeSql('DELETE FROM birthday_data WHERE id = ?', [id])
-    })
-    navigation.navigate("HomeScreen")
+    Alert.alert('Deleting', 'Are you sure you want to delete?', [
+      {text: 'No'},
+      {
+        text: 'Yes',
+        onPress: () => {db.transaction(tx => {tx.executeSql('DELETE FROM birthday_data WHERE id = ?', [id])}); navigation.navigate("HomeScreen")}
+      }
+    ])
   }
 
   return (
@@ -27,14 +30,18 @@ export default function BirthdayScreen({ navigation, route}) {
         <View style={styles.backButton}>
           <Icon type ='ionicon' name="arrow-back-outline" color="#fff" size={40} style={{marginLeft: 10, marginRight: 20}} onPress={() => navigation.navigate("HomeScreen")}/>
           <Icon type ='material' name="edit" color="#fff" size={30} style={{marginLeft: 20, marginRight: 20}}
-          onPress={() => navigation.navigate("CreateBirthdayScreen",
+          onPress={() => navigation.navigate("EditScreen",
           {name_input: name,
             month_input: birthday_month,
             day_input: birthday_day,
-            notes_input: notes})}/>
+            notes_input: notes,
+            image_input: image,
+            id_input: id})}/>
         </View>
           <View style={styles.allButBottomButton}>
-            <View style={styles.placeholderImage}/>
+            <View style={styles.placeholderImage}>
+              <Image source={{ uri: image }} style={styles.placeholderImage} />
+            </View>
             <Text style={styles.nameStyle}>{name}</Text>
             <View style={styles.monthday}>
               <Text style={styles.monthStyle}>Birthday: {birthday_month} / {birthday_day}</Text>

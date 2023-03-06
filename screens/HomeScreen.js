@@ -1,4 +1,4 @@
-import { Animated, ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, TouchableHighlight, TextInput } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, ScrollView, StatusBar, TouchableHighlight, TextInput } from 'react-native';
 import { Icon } from 'react-native-elements'
 import React, { useState, useEffect, useRef } from 'react'
 import { useFocusEffect  } from '@react-navigation/native';
@@ -23,7 +23,7 @@ export default function HomeScreen({ navigation, route }) {
   const db = SQLite.openDatabase('Birthday_data.db');
   const [people, setPeople] = useState([]);
   const [expoPushToken, setExpoPushToken] = useState("");
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -52,7 +52,7 @@ export default function HomeScreen({ navigation, route }) {
   const createTable = () => {
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS birthday_data (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, birthday_month TEXT, birthday_day TEXT, notes TEXT, hasNotification INTEGER)'
+        'CREATE TABLE IF NOT EXISTS birthday_data (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, birthday_month TEXT, birthday_day TEXT, notes TEXT, hasNotification INTEGER, imageURI TEXT)'
       )}
     )
   }; 
@@ -113,7 +113,8 @@ export default function HomeScreen({ navigation, route }) {
           birthday_month: item.birthday_month,
           birthday_day: item.birthday_day,
           notes: item.notes,
-          id: item.id})}
+          id: item.id,
+          image: item.imageURI})}
           underlayColor={'rgba(0, 0, 0, 0)'}>
             <View style={{flexDirection: 'row', alignContent: 'space-between'}}>
               <Text style={{fontSize:35, width:'70%'}}>{item.name}</Text>
@@ -138,7 +139,8 @@ export default function HomeScreen({ navigation, route }) {
           {name_input: '',
             month_input: '',
             day_input: '',
-            notes_input: ''})}>
+            notes_input: '',
+            image_input: ''})}>
           <Text style={styles.buttonText}>Add Birthday</Text>
         </TouchableHighlight>
       </View>
@@ -175,7 +177,7 @@ async function schedulePushNotification(expoPushToken, person, db) {
       tx.executeSql(
         "UPDATE birthday_data SET hasNotification = 1 WHERE id = ?",
         [person.id],
-        (txObj, resultSet) => console.log("Notification Success"),
+        (txObj, resultSet) => null,
         (txObj, error) => console.log(error)
       )
     })

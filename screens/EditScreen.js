@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, Alert, ImageBackground, TouchableWithoutFeedback, TouchableHighlight, KeyboardAvoidingView} from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Alert, ImageBackground, TouchableWithoutFeedback, TouchableHighlight} from 'react-native';
 import { Icon } from 'react-native-elements'
 import * as SQLite from 'expo-sqlite'
 import React, { useState } from 'react'
@@ -9,7 +9,7 @@ const days_in_month = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 export default function CreateBirthdayScreen({ navigation, route }) {
 
-  const { name_input, month_input, day_input, notes_input, image_input } = route.params;
+  const { name_input, month_input, day_input, notes_input, image_input, id_input } = route.params;
   const db = SQLite.openDatabase('Birthday_data.db')
   const [name, setName] = useState(name_input);
   const [month, setMonth] = useState(month_input);
@@ -20,7 +20,7 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   if (image == '') {
     setImage('https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/OOjs_UI_icon_add.svg/2048px-OOjs_UI_icon_add.svg.png');
   }
-
+  console.log(id_input);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -66,27 +66,13 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   *  into the text input fields of this screen into the database of the app. This allows us to pull the information to the home screen, create notifcations,
   *  and also edit/delete people in the future.
   */
-  const addName = () => {
+  const updateName = () => {
     if(errorCheck()) {
+        console.log("Updating")
       db.transaction(tx => {
-        tx.executeSql('INSERT INTO birthday_data ( name, birthday_month, birthday_day, notes, hasNotification, imageURI ) VALUES (?,?,?,?,?,?)', [name, month, day, notes, 0, image])
+        tx.executeSql("UPDATE birthday_data SET name = ?, birthday_month = ?, birthday_day = ?, notes = ?, imageURI = ? WHERE id = ?", [name, month, day, notes, image, id_input])
       });
       navigation.navigate("HomeScreen");
-    }
-  }
-
-  const checkIfFieldEmpty = () => {
-    if (name == '' && month == '' && day == '' && notes == '') {
-      navigation.navigate("HomeScreen")
-    }
-    else {
-      Alert.alert('Data Present!', "You still have data in the input fields. Are you sure you want to go back to the home screen?", [
-        {text: 'No'},
-        {
-          text: 'Yes',
-          onPress: () => navigation.navigate("HomeScreen")
-        }
-      ])
     }
   }
 
@@ -94,7 +80,9 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   <ImageBackground source={{uri: 'https://i.postimg.cc/cJ45GdKH/background1.png'}} style={styles.imageBackground}>
     <View style={styles.container}>
       <View style={styles.backButton}>
-          <Icon type ='ionicon' name="arrow-back-outline" color="#fff" size={40} style={{marginLeft: 10, marginRight: 20}} onPress={() => checkIfFieldEmpty()}/>
+          <Icon type ='ionicon' name="arrow-back-outline" color="#fff" size={40} style={{marginLeft: 10, marginRight: 20}} onPress={() => {
+            updateName();
+            navigation.navigate("HomeScreen")}}/>
       </View>
       <View style={styles.allButBottomButton}>
         <TouchableWithoutFeedback onPress={() => pickImage()}>
@@ -132,8 +120,8 @@ export default function CreateBirthdayScreen({ navigation, route }) {
           value={notes}
         /> 
         </View>
-      <TouchableHighlight style={styles.createButton} underlayColor='rgba(37, 84, 10, 1)' onPress={() => {addName()}}>
-        <Text style={styles.buttonText}>Create</Text>
+      <TouchableHighlight style={styles.createButton} underlayColor='rgba(37, 84, 10, 1)' onPress={() => {updateName()}}>
+        <Text style={styles.buttonText}>Finish Edit</Text>
       </TouchableHighlight>
     </View>
   </ImageBackground>

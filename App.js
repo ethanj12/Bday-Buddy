@@ -1,6 +1,7 @@
 import HomeScreen from "./screens/HomeScreen";
 import BirthdayScreen from "./screens/BirthdayScreen";
 import CreateBirthdayScreen from "./screens/CreateBirthdayScreen";
+import EditScreen from "./screens/EditScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -24,6 +25,10 @@ export default function App() {
         <Stack.Screen
           name="BirthdayScreen"
           component={BirthdayScreen}
+        />
+        <Stack.Screen
+          name="EditScreen"
+          component={EditScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
