@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, Alert, ImageBackground, TouchableWithoutFeedback, TouchableHighlight, KeyboardAvoidingView} from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Alert, ImageBackground, TouchableWithoutFeedback, TouchableHighlight} from 'react-native';
 import { Icon } from 'react-native-elements'
 import * as SQLite from 'expo-sqlite'
 import React, { useState } from 'react'
