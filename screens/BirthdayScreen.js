@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, StatusBar, Button, TouchableHighlight, ImageBackground,  } from 'react-native';
 import { Icon } from 'react-native-elements'
-import React, { useState } from 'react'
+import React from 'react'
 import * as SQLite from 'expo-sqlite'
 
 export default function BirthdayScreen({ navigation, route}) {
