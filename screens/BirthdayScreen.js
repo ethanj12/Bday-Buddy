@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableHighlight, ImageBackground,  } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableHighlight, ImageBackground, Alert } from 'react-native';
 import { Icon } from 'react-native-elements'
 import React from 'react'
 import * as SQLite from 'expo-sqlite'

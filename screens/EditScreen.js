@@ -20,7 +20,6 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   if (image == '') {
     setImage('https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/OOjs_UI_icon_add.svg/2048px-OOjs_UI_icon_add.svg.png');
   }
-  console.log(id_input);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -68,9 +67,10 @@ export default function CreateBirthdayScreen({ navigation, route }) {
   */
   const updateName = () => {
     if(errorCheck()) {
-        console.log("Updating")
       db.transaction(tx => {
-        tx.executeSql("UPDATE birthday_data SET name = ?, birthday_month = ?, birthday_day = ?, notes = ?, imageURI = ? WHERE id = ?", [name, month, day, notes, image, id_input])
+        tx.executeSql("UPDATE birthday_data SET name = ?, birthday_month = ?, birthday_day = ?, notes = ?, imageURI = ? WHERE id = ?", [name, month, day, notes, image, id_input],
+        (txObj, resultSet) => null,
+        (txObj, error) => console.log(error))
       });
       navigation.navigate("HomeScreen");
     }
