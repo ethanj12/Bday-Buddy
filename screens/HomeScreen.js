@@ -117,8 +117,8 @@ export default function HomeScreen({ navigation, route }) {
           image: item.imageURI})}
           underlayColor={'rgba(0, 0, 0, 0)'}>
             <View style={{flexDirection: 'row', alignContent: 'space-between'}}>
-              <Text style={{fontSize:35, width:'70%'}}>{item.name}</Text>
-              <Text style={{fontSize:35, width:'30%'}}>{item.birthday_month} / {item.birthday_day}</Text>
+              <Text style={{fontSize:35, width:'65%'}}>{item.name}</Text>
+              <Text style={{fontSize:35, width:'35%'}}>{item.birthday_month} / {item.birthday_day}</Text>
             </View>
         </TouchableHighlight >
       ) 
@@ -162,7 +162,7 @@ async function schedulePushNotification(expoPushToken, person, db) {
   if (birthday_date < curr_date) {
     birthday_date.setFullYear(year + 1);
   }
-  birthday_date = birthday_date.getTime() + 10800000; //Time defaults to 5 am when make date. Don't know why, but must add 3 hours or ms for noti at 8am
+  birthday_date = birthday_date.getTime() + 10800000; //Time defaults to 5 am when make date. Don't know why, but must add 3 hours of ms for noti at 8am
 
   await Notifications.scheduleNotificationAsync({
     content: {
