@@ -7,7 +7,7 @@ scheduled for 8:00am local time to notify the user of their friend's birthday. T
 Below are gifs demonstrating the major functionalities of the app and how to use it:
 
 # Creating a new birthday profile
-![](https://github.com/ethanj12/BirthdayApp/blob/Main-Branch/GIF%20of%20Creation%20of%20Birthday%20Video.gif)  
+![GIF of Creation of Birthday Video](https://user-images.githubusercontent.com/85595934/225199589-7973cdaf-9059-4dec-9590-8e20fd3b112f.gif)
 # Search Functionality of App 
 ![](https://github.com/ethanj12/BirthdayApp/blob/Main-Branch/Gif%20of%20Search%20Functionality.gif)  
 # Editing of Profiles
