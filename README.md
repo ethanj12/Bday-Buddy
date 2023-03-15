@@ -6,4 +6,4 @@ scheduled for 8:00am local time to notify the user of their friend's birthday. T
 and add their photo.
 
 
-![](https://imgur.com/a/ZCWEJYu.gif)
+![]([https://imgur.com/a/ZCWEJYu.gif](https://github.com/ethanj12/BirthdayApp/blob/test-development/GIF%20of%20Edit%20Screen%20Corrections.gif))
