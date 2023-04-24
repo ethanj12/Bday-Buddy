@@ -11,11 +11,11 @@
     <h1>Creating a new birthday profile:</h1>
     <img src="https://user-images.githubusercontent.com/85595934/234044278-29c899a7-0e1c-4eaa-8509-099ad4d11436.gif" width="300">
     <h1>Search Functionality of App: </h1>
-    <img src="https://github.com/ethanj12/BirthdayApp/blob/Main-Branch/Gif%20of%20Search%20Functionality.gif" width="300">
+    <img src="https://user-images.githubusercontent.com/85595934/234130607-01d249f6-c186-4ca1-9cd8-d9196ada2648.gif" width="300">
     <h1>Editing of Profiles:</h1>
-    <img src="https://github.com/ethanj12/BirthdayApp/blob/Main-Branch/GIF%20of%20Edit%20Screen%20Corrections.gif" width="300">
+    <img src="https://user-images.githubusercontent.com/85595934/234130704-a4ecb364-eed8-471b-8846-2dc8129ec2fd.gif" width="300">
     <h1> Deleting Profiles: </h1>
-    <img src="https://github.com/ethanj12/BirthdayApp/blob/Main-Branch/Gif%20of%20Profile%20Deletion.gif" width="300">
+    <img src="https://user-images.githubusercontent.com/85595934/234131017-d679c020-0ff8-473c-9af9-dba1d730f5f2.gif" width="300">
   </div>
 </div>
 
