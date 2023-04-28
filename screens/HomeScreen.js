@@ -166,8 +166,8 @@ async function schedulePushNotification(expoPushToken, person, db) {
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body' + birthday_date,
+      title: "It's somebody's birthday today!",
+      body: 'Check who!',
       data: { data: expoPushToken },
       sound: 'default'
     },
