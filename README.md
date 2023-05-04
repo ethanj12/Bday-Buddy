@@ -1,8 +1,7 @@
 <div align="center">
   
-  ![Birthday_Reminder](https://user-images.githubusercontent.com/85595934/234128947-f6c26a0b-2997-48fd-8c97-1d74ece9adfa.png)
+  ![Birthday_Reminder](https://user-images.githubusercontent.com/85595934/236353185-99310b9c-e9d5-4358-803f-15aa042cdfe9.png)
 
-  
   The purpose of this app is to organize and notify the user of any upcoming birthdays for their friends. The user inputs their friend's birthday and a notification is
   scheduled for 8:00am local time to notify the user of their friend's birthday. The user is also able to search for their friend's birthday, make notes on their birthday  gift wishes, and add their photo.  
 
